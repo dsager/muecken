@@ -1,0 +1,10 @@
+/spec/reports/
+/tmp/
+/.yardoc/
+/_yardoc/
+/doc/
+/rdoc/
+Gemfile.lock
+.ruby-version
+.ruby-gemset
+.rvmrc
