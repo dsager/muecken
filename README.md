@@ -1,10 +1,24 @@
 # Muecken
 
-Ruby library to parse and analyze financial data.
+Ruby library to parse and analyze financial data. This library is work in 
+progress and not really usable yet. Feel free to look around but don't expect
+too much ;)
 
-## Usage
+Muecken (German for "mosquito", an informal word for money) is supposed to 
+provide an easy way of parsing, analyzing and categorizing financial data to
+give you an overview of where money comes from and, most probably more 
+important, where it goes.
 
-TODO...
+The main design goal for this library is simplicity, so I'm using the Ruby 
+standard library as much as possible.
+
+## Categorization
+
+It is important to make the categorization as straight forward as possible so
+that it is actually usable and doesn't end up in too much manual work.
+
+I have some ideas about a learning algorithm, as soon as I'll start working on
+it I'll elaborate here...
 
 ## Maintainer
 
