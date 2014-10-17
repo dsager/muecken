@@ -43,6 +43,17 @@ describe Muecken::Entry do
     end
   end
 
+  describe '#add_category' do
+    let(:category) { Muecken::Category.new('foobar') }
+    it 'adds a category' do
+      entry.add_category category
+      entry.categories.must_include category
+    end
+    it 'rejects any non-category object' do
+      proc { entry.add_category(:foobar) }.must_raise ArgumentError
+    end
+  end
+
   describe '#to_hash' do
     it 'creates a hash representation of the entry' do
       data = entry.to_hash
