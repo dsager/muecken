@@ -27,9 +27,11 @@ it I'll elaborate here...
 ## Contributing
 
 - Fork
-- Implement Feature or Fix
-- Create Pull Request
-- Thank you!
+- Implement your Feature or Fix including Tests
+- Update the [change log](CHANGELOG.md)
+- Create Pull Request (ideally squashed into one commit)
+
+Thank you!
 
 See the [list of contributors](https://github.com/dsager/muecken/contributors).
 
