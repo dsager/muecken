@@ -5,4 +5,5 @@ module Muecken
 end
 
 require 'muecken/version'
+require 'muecken/entry'
 require 'muecken/parser'

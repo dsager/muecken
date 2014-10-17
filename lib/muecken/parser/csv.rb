@@ -11,7 +11,7 @@ class Muecken::Parser::CSV
 
   def self.create_entry(row)
     row = row.map(&:strip)
-    Muecken::Parser::Entry.from_hash({
+    Muecken::Entry.from_hash({
       date: Date.parse(row[0]),
       description: row[1],
       value: row[2].to_f,
