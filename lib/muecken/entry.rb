@@ -5,6 +5,10 @@ module Muecken
     attr_accessor :description, :value, :currency
     attr_reader :date, :categories
 
+    def initialize
+      @categories = []
+    end
+
     def self.from_hash(data)
       entry = new
       entry.date = data[:date] if data[:date]
@@ -19,8 +23,7 @@ module Muecken
     end
 
     def add_category(category)
-      raise ArgumentError unless category.class <= Category
-      @categories ||= []
+      raise ArgumentError unless category.class <= Categories::Category
       @categories << category
     end
 

@@ -1,4 +1,3 @@
-require 'csv'
 require 'spec_helper'
 
 describe Muecken::Parser::CSV do
