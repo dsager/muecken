@@ -12,6 +12,13 @@ module Muecken
         raise ArgumentError unless rule.class <= Rule
         @rules << rule
       end
+
+      def match?(entry)
+        rules.each do |rule|
+          return true if rule.match?(entry)
+        end
+        false
+      end
     end
   end
 end
