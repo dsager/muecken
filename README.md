@@ -1,6 +1,7 @@
 # Muecken
 
 [![Build Status](https://travis-ci.org/dsager/muecken.svg?branch=master)](https://travis-ci.org/dsager/muecken)
+[![Coverage Status](https://img.shields.io/coveralls/dsager/muecken.svg)](https://coveralls.io/r/dsager/muecken)
 
 Ruby library to parse and analyze financial data. This library is work in
 progress and not really usable yet. Feel free to look around but don't expect
