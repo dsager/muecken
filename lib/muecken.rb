@@ -5,6 +5,7 @@ require 'muecken/version'
 ## Matchers
 require 'muecken/matcher/base'
 require 'muecken/matcher/levenshtein'
+require 'muecken/matcher/date'
 
 ## Categories
 require 'muecken/categories/rule'
