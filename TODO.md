@@ -1,4 +1,4 @@
-# Mucken - TODO
+# Muecken - TODO
 
 This is a basic TODO list for my personal use. As soon as Muecken reaches a
 stable state bugs and features are to be tracked via GitHub issues...
