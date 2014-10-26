@@ -3,9 +3,9 @@ module Muecken
     class Category
       attr_reader :name, :rules
 
-      def initialize(name_value)
+      def initialize(name_value, rules_value = nil)
         @name = name_value
-        @rules = []
+        @rules = rules_value || []
       end
 
       def add_rule(rule)

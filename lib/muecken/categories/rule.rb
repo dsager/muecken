@@ -3,8 +3,8 @@ module Muecken
     class Rule
       attr_reader :examples, :matcher
 
-      def initialize(matcher_value = nil, examples = nil)
-        @examples = examples || []
+      def initialize(matcher_value = nil, examples_value = nil)
+        @examples = examples_value || []
         self.matcher = matcher_value unless matcher_value.nil?
       end
 

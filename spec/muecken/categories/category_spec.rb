@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Muecken::Categories::Category do
   let(:category) { Muecken::Categories::Category.new('foobar') }
   let(:entry) { Muecken::Entry.new }
+  let(:rule) { Muecken::Categories::Rule.new }
 
   describe '#initialize' do
     it 'sets the name' do
@@ -11,10 +12,13 @@ describe Muecken::Categories::Category do
     it 'creates an empty rule list' do
       category.rules.must_equal []
     end
+    it 'accepts an optional rule list' do
+      category = Muecken::Categories::Category.new('foobar', [rule])
+      category.rules.must_include rule
+    end
   end
 
   describe '#add_rule' do
-    let(:rule) { Muecken::Categories::Rule.new }
     it 'adds a rule' do
       category.add_rule rule
       category.rules.must_include rule
