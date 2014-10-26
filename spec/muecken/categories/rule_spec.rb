@@ -4,6 +4,7 @@ describe Muecken::Categories::Rule do
   let(:example_1) { Muecken::Entry.new }
   let(:example_2) { Muecken::Entry.new }
   let(:example_3) { Muecken::Entry.new }
+  let(:examples) { [example_1, example_2, example_3] }
   let(:rule) { Muecken::Categories::Rule.new }
   let(:matcher) { Muecken::Matcher::Base.new }
 
@@ -14,6 +15,12 @@ describe Muecken::Categories::Rule do
     it 'optionally accepts a matcher' do
       another_rule = Muecken::Categories::Rule.new(matcher)
       another_rule.matcher.must_equal matcher
+    end
+    it 'optionally accepts a examples' do
+      rule = Muecken::Categories::Rule.new(nil, examples)
+      rule.examples.must_include example_1
+      rule.examples.must_include example_2
+      rule.examples.must_include example_3
     end
   end
 
