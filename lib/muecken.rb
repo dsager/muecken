@@ -10,6 +10,7 @@ require 'muecken/matcher/date'
 ## Categories
 require 'muecken/categories/rule'
 require 'muecken/categories/category'
+require 'muecken/categories/helper'
 
 ## Entries
 require 'muecken/entry'
