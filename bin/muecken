@@ -1,0 +1,51 @@
+#!/usr/bin/env ruby
+
+#
+# THIS IS A TEST SCRIPT, MEANT FOR DEVELOPMENT USAGE ONLY
+#
+
+require 'muecken'
+require 'optparse'
+
+# define options
+opts = OptionParser.new do |o|
+  o.banner = 'Muecken: a Ruby library to parse and analyze financial data.'
+  o.define_head 'Usage: bundle exec muecken <input_file>'
+  o.separator ''
+  o.separator 'Examples:'
+  o.separator ' bundle exec bin/muecken tmp/test-data.csv'
+  o.separator ''
+  o.separator 'Options:'
+  o.on_tail('-?', '--help', 'Show this message') { puts o; exit 1 }
+  o.on_tail('-v', '--version', 'Show version') { puts Muecken::VERSION; exit 0 }
+end
+opts.parse!
+
+# check if file exists
+file_name = ARGV.shift
+if file_name.to_s.strip.empty? || !File.exist?(file_name.to_s)
+  puts opts
+  exit 1
+end
+
+# setup categories
+categories = Muecken::Categories::Helper.month_categories
+categories << Muecken::Categories::Helper.year_category(2013)
+categories << Muecken::Categories::Helper.year_category(2014)
+
+# load entries
+entries = Muecken::Parser::CSV.read_file(file_name)
+
+# categorize entries
+entries.each do |entry|
+  categories.each do |category|
+    entry.add_category(category) if category.match?(entry)
+  end
+end
+
+# print entries
+entries.each do |entry|
+  puts "#{entry.categories.map(&:name)} - #{entry}"
+end
+
+exit 0
