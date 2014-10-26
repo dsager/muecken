@@ -34,6 +34,13 @@ describe Muecken::Matcher::Date do
     let(:same_weekday_entry) { Muecken::Entry.from_hash(date: date + 7) }
     let(:next_year_entry) { Muecken::Entry.from_hash(date: date.next_year) }
     let(:different_entry) { Muecken::Entry.from_hash(date: different_date ) }
+    let(:matcher) { Muecken::Matcher::Date.new }
+    it 'returns false when the first entry does not have a date' do
+      matcher.match?(Muecken::Entry.new, reference_entry).must_equal false
+    end
+    it 'returns false when the second entry does not have a date' do
+      matcher.match?(reference_entry, Muecken::Entry.new).must_equal false
+    end
     describe 'in :day mode' do
       let(:matcher) { Muecken::Matcher::Date.new(:day) }
       it 'matches entries with the same day' do
