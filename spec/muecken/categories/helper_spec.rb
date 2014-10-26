@@ -15,17 +15,18 @@ describe Muecken::Categories::Helper do
   let(:nov_entry) { Muecken::Entry.from_hash(date: Date.parse('2014-11-03')) }
   let(:dec_entry) { Muecken::Entry.from_hash(date: Date.parse('2014-12-24')) }
 
+  let(:jul_entry_2013) do
+    Muecken::Entry.from_hash(date: jul_entry.date.prev_year)
+  end
+
   describe 'self.month_category' do
-    let(:another_jul_entry) do
-      Muecken::Entry.from_hash(date: jul_entry.date.prev_year)
-    end
     let(:july_category) { Muecken::Categories::Helper.month_category(:july) }
     it 'creates a category with the name of a certain month' do
       july_category.name.must_equal 'July'
     end
     it 'creates a category that matches entries from a certain month' do
       july_category.match?(jul_entry).must_equal true
-      july_category.match?(another_jul_entry).must_equal true
+      july_category.match?(jul_entry_2013).must_equal true
     end
     it 'creates a category that does not match entries from a other months' do
       july_category.match?(may_entry).must_equal false
@@ -87,6 +88,27 @@ describe Muecken::Categories::Helper do
     it 'creates a category for December' do
       categories[11].name.must_equal 'December'
       categories[11].match?(dec_entry).must_equal true
+    end
+  end
+
+  describe 'self.year_category' do
+    let(:category_2013) { Muecken::Categories::Helper.year_category(2013) }
+    let(:category_2014) { Muecken::Categories::Helper.year_category(2014) }
+    it 'creates a category with the name of a certain year' do
+      category_2013.name.must_equal '2013'
+      category_2014.name.must_equal '2014'
+    end
+    it 'creates a category that matches entries from a certain year' do
+      category_2013.match?(jul_entry_2013).must_equal true
+      category_2014.match?(jul_entry).must_equal true
+    end
+    it 'creates a category that does not match entries from a other years' do
+      category_2013.match?(jul_entry).must_equal false
+      category_2014.match?(jul_entry_2013).must_equal false
+    end
+    it 'raises an error for invalid years' do
+      proc { Muecken::Categories::Helper.year_category(:foo) }
+        .must_raise ArgumentError
     end
   end
 
