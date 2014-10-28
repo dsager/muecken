@@ -16,6 +16,8 @@ important, where it goes.
 The main design goal for this library is simplicity, so I'm using the Ruby
 standard library as much as possible.
 
+Check out the [TODO list](TODO.md).
+
 ## Usage
 
 To be defined...
