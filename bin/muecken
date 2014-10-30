@@ -28,24 +28,29 @@ if file_name.to_s.strip.empty? || !File.exist?(file_name.to_s)
   exit 1
 end
 
+# create engine
+engine = Muecken::Engine.new
+
 # setup categories
-categories = Muecken::Categories::Helper.month_categories
-categories << Muecken::Categories::Helper.year_category(2013)
-categories << Muecken::Categories::Helper.year_category(2014)
+engine.categories = Muecken::Categories::Helper.month_categories
+engine.categories << Muecken::Categories::Helper.year_category(2013)
+engine.categories << Muecken::Categories::Helper.year_category(2014)
 
 # load entries
 entries = Muecken::Parser::CSV.read_file(file_name)
 
 # categorize entries
 entries.each do |entry|
-  categories.each do |category|
-    entry.add_category(category) if category.match?(entry)
-  end
+  engine.categorize_entry(entry)
+  engine.add_entry(entry)
 end
 
-# print entries
-entries.each do |entry|
-  puts "#{entry.categories.map(&:name)} - #{entry}"
+# print each category and it's entries
+engine.categories.each do |category|
+  puts "\n -- #{category.name} -- \n"
+  engine.by_category(category).each do |entry|
+    puts entry
+  end
 end
 
 exit 0

@@ -2,7 +2,7 @@
 module Muecken end
 require 'muecken/version'
 
-## Matchers
+## Matcher
 require 'muecken/matcher/base'
 require 'muecken/matcher/levenshtein'
 require 'muecken/matcher/date'
@@ -18,3 +18,5 @@ require 'muecken/entry'
 ## Parsers
 require 'muecken/parser/csv'
 
+## Engine
+require 'muecken/engine'
