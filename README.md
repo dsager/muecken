@@ -13,14 +13,44 @@ provide an easy way of parsing, analyzing and categorizing financial data to
 give you an overview of where money comes from and, most probably more
 important, where it goes.
 
-The main design goal for this library is simplicity, so I'm using the Ruby
-standard library as much as possible.
+```                                                       
+
+  +-------+       +---------+       +------------+   
+  |       |       |         |       |            |   
+  |  CSV  | +---> |         | +---> |  Entries   |   
+  |       |       |         |       |            |   
+  +-------+       |         |       +-----+------+   
+                  | Muecken |             |          
+  +-------+       |         |       +-----+------+   
+  |       |       |         |       |            |   
+  |  API  | +---> |         | +---> | Categories |   
+  |       |       |         |       |            |   
+  +-------+       +---------+       +------------+   
+
+```
+
+It basically takes data from a source like a CSV file or an API to parse and
+analyze it so that you end up with categorized entries. The task of creating
+fancy diagrams and reports is for other apps based on Muecken :)
+
+The main design goals for this library are simplicity, speed and stability - so
+I'm using the Ruby standard library as much as possible.
 
 Check out the [TODO list](TODO.md).
 
 ## Usage
 
-To be defined...
+```ruby
+engine = Muecken::Engine.new
+engine.add_category example_category
+Muecken::Parser::CSV.read_file(file_name).each do |entry|
+  engine.categorize_entry(entry)
+  engine.add_entry(entry)
+end
+```
+
+For more examples check the tests under `spec/` or the file `bin/muecken`. I'll
+write a proper documentation once the API is more stable...
 
 ## Categorization
 
