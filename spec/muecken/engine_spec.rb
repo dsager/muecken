@@ -4,14 +4,12 @@ describe Muecken::Engine do
 
   let(:engine) { Muecken::Engine.new }
   let(:entry) { Muecken::Entry.new }
-  let(:category_1) do
-    Muecken::Categories::Category.new 'foo',
-      [Muecken::Categories::AlwaysMatchRule.new]
-  end
-  let(:category_2) do
-    Muecken::Categories::Category.new 'bar',
-      [Muecken::Categories::NeverMatchRule.new]
-  end
+  let(:true_matcher) { Muecken::Matcher::AlwaysMatcher.new }
+  let(:false_matcher) { Muecken::Matcher::NeverMatcher.new }
+  let(:category_1) { Muecken::Categories::Base.new 'foo' }
+  let(:rule_1) { Muecken::Rules::OneMatch.new([true_matcher], [category_1]) }
+  let(:category_2) { Muecken::Categories::Base.new 'bar' }
+  let(:rule_2) { Muecken::Rules::OneMatch.new([false_matcher], [category_2]) }
 
   describe '#initialize' do
     it 'creates an empty entry list' do
@@ -22,11 +20,15 @@ describe Muecken::Engine do
       engine.categories.must_be_instance_of Array
       engine.categories.must_be_empty
     end
+    it 'creates an empty rules list' do
+      engine.rules.must_be_instance_of Array
+      engine.rules.must_be_empty
+    end
   end
 
   describe '#categorize_entry' do
     before do
-      engine.categories = [category_1, category_2]
+      engine.rules = [rule_1, rule_2]
       engine.categorize_entry entry
     end
     it 'adds matching categories to an entry' do

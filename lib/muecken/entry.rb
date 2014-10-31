@@ -34,7 +34,7 @@ module Muecken
     # @param [Categories::Category] category
     # @return [Categories::Category]
     def add_category(category)
-      raise ArgumentError unless category.class <= Categories::Category
+      raise ArgumentError unless category.class <= Categories::Base
       @categories << category
     end
 
