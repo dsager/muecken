@@ -32,7 +32,7 @@ important, where it goes to...
 Muecken in it's most basic sense takes data from a source like a CSV file or an
 API, parses and analyzes it so that you end up with categorized entries. While
 entries represent transactions (e.g. paying your rent or getting your salary),
-categories are defined by user and therefore completely dynamic.
+categories are defined by the user and therefore completely dynamic.
 
 The creation of fancy diagrams and reports is not part of this library. Once
 Muecken is stable I'll start working on an app that does this kind of things. In
