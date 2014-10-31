@@ -35,11 +35,41 @@ describe Muecken::Engine do
     it 'does not add non-matching categories to an entry' do
       entry.categories.wont_include category_2
     end
+    it 'rejects any non-entry object' do
+      proc { engine.categorize_entry :foobar }.must_raise ArgumentError
+    end
   end
 
   describe '#add_entry' do
     before { engine.add_entry entry }
     it('adds an entry to the list') { engine.entries.must_include entry }
+    it 'rejects any non-entry object' do
+      proc { engine.add_entry :foobar }.must_raise ArgumentError
+    end
+  end
+
+  describe '#add_category' do
+    before { engine.add_category category_1 }
+    it('adds a category to the list') do
+      engine.categories.must_include category_1
+    end
+    it 'rejects any non-category object' do
+      proc { engine.add_category :foobar }.must_raise ArgumentError
+    end
+  end
+
+  describe '#categories=' do
+    before { engine.categories = [category_1, category_2] }
+    it('adds a category to the list') do
+      engine.categories.must_include category_1
+      engine.categories.must_include category_2
+    end
+    it 'rejects any non-array object' do
+      proc { engine.categories = :foobar }.must_raise ArgumentError
+    end
+    it 'rejects any non-category object in the list' do
+      proc { engine.categories = [category_1, :foo] }.must_raise ArgumentError
+    end
   end
 
   describe '#by_category' do
@@ -59,6 +89,9 @@ describe Muecken::Engine do
     it 'does not return entries without that category' do
       engine.by_category(category_1).wont_include another_entry
       engine.by_category(category_2).wont_include some_entry
+    end
+    it 'rejects any non-category object' do
+      proc { engine.by_category :foobar }.must_raise ArgumentError
     end
   end
 
