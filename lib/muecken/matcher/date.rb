@@ -10,40 +10,40 @@ module Muecken
     #
     class Date < Base
       MODES = [:day, :month, :year, :weekday]
-      attr_reader :mode
+      attr_reader :mode, :reference_date
 
-      # @param mode_value [Symbol] One of the supported modes, defaults to :day
-      def initialize(mode_value = :day)
+      # @param mode_value [Symbol] One of the supported modes
+      # @param reference_date_value [Date] A reference date used for matching
+      def initialize(mode_value, reference_date_value)
         raise ArgumentError unless MODES.include? mode_value
+        raise ArgumentError unless reference_date_value.is_a?(::Date)
         @mode = mode_value
+        @reference_date = reference_date_value
       end
 
-      # @param entry_1 [Muecken::Entry]
-      # @param entry_2 [Muecken::Entry]
+      # @param entry [Muecken::Entry]
       # @return [Boolean]
-      def match?(entry_1, entry_2)
-        unless entry_1.date.is_a?(::Date) && entry_2.date.is_a?(::Date)
-          return false
-        end
-        send("#{mode}_matches?".to_sym, entry_1.date, entry_2.date)
+      def match?(entry)
+        return false unless entry.date.is_a?(::Date)
+        send("#{mode}_matches?".to_sym, entry.date)
       end
 
       private
 
-      def day_matches?(date_1, date_2)
-        date_1 == date_2
+      def day_matches?(date)
+        date == reference_date
       end
 
-      def month_matches?(date_1, date_2)
-        date_1.month == date_2.month
+      def month_matches?(date)
+        date.month == reference_date.month
       end
 
-      def year_matches?(date_1, date_2)
-        date_1.year == date_2.year
+      def year_matches?(date)
+        date.year == reference_date.year
       end
 
-      def weekday_matches?(date_1, date_2)
-        date_1.cwday == date_2.cwday
+      def weekday_matches?(date)
+        date.cwday == reference_date.cwday
       end
     end
   end

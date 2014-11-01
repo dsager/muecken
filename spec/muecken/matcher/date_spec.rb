@@ -2,95 +2,104 @@ require 'spec_helper'
 
 describe Muecken::Matcher::Date do
 
-  it 'supports the :day mode' do
-    Muecken::Matcher::Date.new(:day).must_be_instance_of Muecken::Matcher::Date
-  end
+  let(:day_matcher) { Muecken::Matcher::Date.new(:day, Date.today) }
+  let(:month_matcher) { Muecken::Matcher::Date.new(:month, Date.today) }
+  let(:year_matcher) { Muecken::Matcher::Date.new(:year, Date.today) }
+  let(:weekday_matcher) { Muecken::Matcher::Date.new(:weekday, Date.today) }
+  let(:invalid_mode_matcher) { Muecken::Matcher::Date.new(:foobar, Date.today) }
+  let(:invalid_date_matcher) { Muecken::Matcher::Date.new(:day, :foobar) }
 
-  it 'supports the :month mode' do
-    Muecken::Matcher::Date.new(:month)
-      .must_be_instance_of Muecken::Matcher::Date
-  end
-
-  it 'supports the :year mode' do
-    Muecken::Matcher::Date.new(:year).must_be_instance_of Muecken::Matcher::Date
-  end
-
-  it 'supports the :weekday mode' do
-    Muecken::Matcher::Date.new(:weekday)
-      .must_be_instance_of Muecken::Matcher::Date
-  end
-
-  it 'fails for unsupported modes' do
-    proc { Muecken::Matcher::Date.new(:foobar) }.must_raise ArgumentError
+  describe '#initialize' do
+    it('supports the :day mode') do
+      day_matcher.must_be_instance_of Muecken::Matcher::Date
+    end
+    it 'supports the :month mode' do
+      month_matcher.must_be_instance_of Muecken::Matcher::Date
+    end
+    it 'supports the :year mode' do
+      year_matcher.must_be_instance_of Muecken::Matcher::Date
+    end
+    it 'supports the :weekday mode' do
+      weekday_matcher.must_be_instance_of Muecken::Matcher::Date
+    end
+    it 'fails when passed an invalid mode' do
+      proc { invalid_mode_matcher }.must_raise ArgumentError
+    end
+    it 'fails for unsupported modes' do
+      proc { invalid_date_matcher }.must_raise ArgumentError
+    end
   end
 
   describe '#match?' do
     let(:date) { Date.parse('2014-10-23') }
     let(:different_date) { Date.parse('1994-04-05') }
-    let(:reference_entry) { Muecken::Entry.from_hash(date: date) }
-    let(:same_day_entry) { Muecken::Entry.from_hash(date: date.dup) }
-    let(:same_month_entry) { Muecken::Entry.from_hash(date: date.next_day) }
-    let(:same_year_entry) { Muecken::Entry.from_hash(date: date.next_month) }
-    let(:same_weekday_entry) { Muecken::Entry.from_hash(date: date + 7) }
-    let(:next_year_entry) { Muecken::Entry.from_hash(date: date.next_year) }
-    let(:different_entry) { Muecken::Entry.from_hash(date: different_date ) }
-    let(:matcher) { Muecken::Matcher::Date.new }
+    let(:same_month) { date.next_day }
+    let(:next_month) { date.next_month }
+    let(:same_weekday) { date + 7 }
+    let(:next_year) { date.next_year }
+
+    let(:entry) { Muecken::Entry.from_hash(date: date) }
+    let(:same_month_entry) { Muecken::Entry.from_hash(date: same_month) }
+    let(:same_year_entry) { Muecken::Entry.from_hash(date: next_month) }
+    let(:same_weekday_entry) { Muecken::Entry.from_hash(date: same_weekday) }
+    let(:next_year_entry) { Muecken::Entry.from_hash(date: next_year) }
+    let(:different_entry) { Muecken::Entry.from_hash(date: different_date) }
+
+
     it 'returns false when the first entry does not have a date' do
-      matcher.match?(Muecken::Entry.new, reference_entry).must_equal false
+      day_matcher.match?(Muecken::Entry.new).must_equal false
     end
-    it 'returns false when the second entry does not have a date' do
-      matcher.match?(reference_entry, Muecken::Entry.new).must_equal false
-    end
+
     describe 'in :day mode' do
-      let(:matcher) { Muecken::Matcher::Date.new(:day) }
+      let(:matcher) { Muecken::Matcher::Date.new(:day, date) }
       it 'matches entries with the same day' do
-        matcher.match?(reference_entry, same_day_entry).must_equal true
+        matcher.match?(entry).must_equal true
       end
       it 'does not match entries with different days' do
-        matcher.match?(reference_entry, same_month_entry).must_equal false
-        matcher.match?(reference_entry, same_year_entry).must_equal false
-        matcher.match?(reference_entry, same_weekday_entry).must_equal false
-        matcher.match?(reference_entry, next_year_entry).must_equal false
-        matcher.match?(reference_entry, different_entry).must_equal false
+        matcher.match?(same_month_entry).must_equal false
+        matcher.match?(same_year_entry).must_equal false
+        matcher.match?(same_weekday_entry).must_equal false
+        matcher.match?(next_year_entry).must_equal false
+        matcher.match?(different_entry).must_equal false
       end
     end
     describe 'in :month mode' do
-      let(:matcher) { Muecken::Matcher::Date.new(:month) }
+      let(:matcher) { Muecken::Matcher::Date.new(:month, date) }
       it 'matches entries with the same month' do
-        matcher.match?(reference_entry, same_day_entry).must_equal true
-        matcher.match?(reference_entry, same_month_entry).must_equal true
-        matcher.match?(reference_entry, same_weekday_entry).must_equal true
-        matcher.match?(reference_entry, next_year_entry).must_equal true
+        matcher.match?(entry).must_equal true
+        matcher.match?(same_month_entry).must_equal true
+        matcher.match?(same_weekday_entry).must_equal true
+        matcher.match?(next_year_entry).must_equal true
       end
       it 'does not match entries with different months' do
-        matcher.match?(reference_entry, same_year_entry).must_equal false
-        matcher.match?(reference_entry, different_entry).must_equal false
+        matcher.match?(same_year_entry).must_equal false
+        matcher.match?(different_entry).must_equal false
       end
     end
     describe 'in :year mode' do
-      let(:matcher) { Muecken::Matcher::Date.new(:year) }
+      let(:matcher) { Muecken::Matcher::Date.new(:year, date) }
       it 'matches entries with the same year' do
-        matcher.match?(reference_entry, same_day_entry).must_equal true
-        matcher.match?(reference_entry, same_month_entry).must_equal true
-        matcher.match?(reference_entry, same_weekday_entry).must_equal true
-        matcher.match?(reference_entry, same_year_entry).must_equal true
+        matcher.match?(entry).must_equal true
+        matcher.match?(same_month_entry).must_equal true
+        matcher.match?(same_weekday_entry).must_equal true
+        matcher.match?(same_year_entry).must_equal true
       end
       it 'does not match entries with different years' do
-        matcher.match?(reference_entry, next_year_entry).must_equal false
-        matcher.match?(reference_entry, different_entry).must_equal false
+        matcher.match?(next_year_entry).must_equal false
+        matcher.match?(different_entry).must_equal false
       end
     end
     describe 'in :weekday mode' do
-      let(:matcher) { Muecken::Matcher::Date.new(:weekday) }
+      let(:matcher) { Muecken::Matcher::Date.new(:weekday, date) }
       it 'matches entries with the same weekday' do
-        matcher.match?(reference_entry, same_day_entry).must_equal true
-        matcher.match?(reference_entry, same_weekday_entry).must_equal true
+        matcher.match?(entry).must_equal true
+        matcher.match?(same_weekday_entry).must_equal true
       end
       it 'does not match entries with different weekdays' do
-        matcher.match?(reference_entry, same_month_entry).must_equal false
-        matcher.match?(reference_entry, same_year_entry).must_equal false
-        matcher.match?(reference_entry, next_year_entry).must_equal false
-        matcher.match?(reference_entry, different_entry).must_equal false
+        matcher.match?(same_month_entry).must_equal false
+        matcher.match?(same_year_entry).must_equal false
+        matcher.match?(next_year_entry).must_equal false
+        matcher.match?(different_entry).must_equal false
       end
     end
   end

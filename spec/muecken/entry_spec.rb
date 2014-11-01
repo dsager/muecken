@@ -44,7 +44,7 @@ describe Muecken::Entry do
   end
 
   describe '#add_category' do
-    let(:category) { Muecken::Categories::Category.new('foobar') }
+    let(:category) { Muecken::Categories::Base.new('foobar') }
     it 'adds a category' do
       entry.add_category category
       entry.categories.must_include category

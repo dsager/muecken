@@ -3,4 +3,7 @@ source 'https://rubygems.org'
 # dependencies specified in in muecken.gemspec
 gemspec
 
-gem 'codeclimate-test-reporter', group: :test, require: false
+group :test do
+  gem 'codeclimate-test-reporter', require: false
+  gem 'minitest', require: false # minitest of ruby 1.9 doesn't support stub
+end

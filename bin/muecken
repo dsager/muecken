@@ -31,10 +31,10 @@ end
 # create engine
 engine = Muecken::Engine.new
 
-# setup categories
-engine.categories = Muecken::Categories::Helper.month_categories
-engine.add_category Muecken::Categories::Helper.year_category(2013)
-engine.add_category Muecken::Categories::Helper.year_category(2014)
+# setup rules
+engine.rules = Muecken::Rules::Builder.month_rules
+engine.add_rule Muecken::Rules::Builder.year_rule(2013)
+engine.add_rule Muecken::Rules::Builder.year_rule(2014)
 
 # load entries
 entries = Muecken::Parser::CSV.read_file(file_name)

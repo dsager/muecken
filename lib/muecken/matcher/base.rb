@@ -1,7 +1,7 @@
 module Muecken
   module Matcher
     class Base
-      def match?(entry_1, entry_2)
+      def match?(entry)
         raise NotImplementedError
       end
     end
