@@ -1,11 +1,14 @@
 ## Muecken parses and analyzes financial data
 module Muecken
 end
+
+## Version
 require 'muecken/version'
 
 ## Matcher
 require 'muecken/matcher/base'
 require 'muecken/matcher/similarity'
+require 'muecken/matcher/sub_string'
 require 'muecken/matcher/date'
 
 ## Categories

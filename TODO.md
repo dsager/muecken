@@ -6,8 +6,6 @@ stable state bugs and features are to be tracked via GitHub issues...
 - "engine" implementing basic work flows
 - simple YAML persistence
 - string cleaner for descriptions
-- additional matcher classes
-  - amount ranges (e.g. 0€ - 50€)
-  - simple string matching for specific parts of the description, like reference numbers
+- matcher for amount ranges (e.g. 0€ - 50€)
 - generic support for ORMs like active record
 - performance tests / benchmarks
