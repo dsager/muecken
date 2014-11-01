@@ -6,38 +6,61 @@
 
 require 'muecken'
 require 'optparse'
+require 'yaml'
 
 # define options
-opts = OptionParser.new do |o|
-  o.banner = 'Muecken: a Ruby library to parse and analyze financial data.'
-  o.define_head 'Usage: bundle exec muecken <input_file>'
-  o.separator ''
-  o.separator 'Examples:'
-  o.separator ' bundle exec bin/muecken tmp/test-data.csv'
+options = {
+  rule_file: nil,
+  input_files: []
+}
+opt_parser = OptionParser.new do |o|
+  o.banner = 'Usage: muecken [OPTIONS]'
   o.separator ''
   o.separator 'Options:'
+  # rule file
+  o.on('-r', '--rules [RULE_FILE]', 'YAML file with an export of rules') do |r|
+    options[:rule_file] = r
+  end
+  # list of input files
+  o.on('-i', '--input FILE_1[,FILE_2][,...]', Array,
+    'List of CSV files that contain entries') do |i|
+    options[:input_files] = i
+  end
+  # help msg
   o.on_tail('-?', '--help', 'Show this message') { puts o; exit 1 }
-  o.on_tail('-v', '--version', 'Show version') { puts Muecken::VERSION; exit 0 }
+  # version
+  o.on_tail('--version', 'Show version') { puts Muecken::VERSION; exit 0 }
 end
-opts.parse!
+opt_parser.parse!
 
-# check if file exists
-file_name = ARGV.shift
-if file_name.to_s.strip.empty? || !File.exist?(file_name.to_s)
-  puts opts
-  exit 1
+# check if rule and input files exists
+([options[:rule_file]] + options[:input_files]).compact.each do |file|
+  unless File.exist?(file)
+    puts 'File does not exist: ' + file
+    puts opt_parser
+    exit 1
+  end
 end
 
 # create engine
 engine = Muecken::Engine.new
 
 # setup rules
-engine.rules = Muecken::Rules::Builder.month_rules
-engine.add_rule Muecken::Rules::Builder.year_rule(2013)
-engine.add_rule Muecken::Rules::Builder.year_rule(2014)
+if options[:rule_file]
+  # read rules file if provided
+  engine.rules = YAML.load_file(options[:rule_file])
+else
+  # some default rules
+  engine.rules = Muecken::Rules::Builder.month_rules
+  engine.add_rule Muecken::Rules::Builder.year_rule(2013)
+  engine.add_rule Muecken::Rules::Builder.year_rule(2014)
+end
 
 # load entries
-entries = Muecken::Parser::CSV.read_file(file_name)
+entries = []
+options[:input_files].each do |input_file|
+  entries.concat Muecken::Parser::CSV.read_file(input_file)
+end
 
 # categorize entries
 entries.each do |entry|
