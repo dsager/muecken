@@ -5,7 +5,7 @@ require 'muecken/version'
 
 ## Matcher
 require 'muecken/matcher/base'
-require 'muecken/matcher/levenshtein'
+require 'muecken/matcher/similarity'
 require 'muecken/matcher/date'
 
 ## Categories
