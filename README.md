@@ -52,7 +52,7 @@ subject to change!**
 
 ```ruby
 engine = Muecken::Engine.new
-engine.add_category example_category
+engine.add_rule example_rule
 Muecken::Parser::CSV.read_file(file_name).each do |entry|
   engine.categorize_entry(entry)
   engine.add_entry(entry)
