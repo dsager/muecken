@@ -50,8 +50,11 @@ mind.
 **As mentioned earlier: This is still a very early version and the API is
 subject to change!**
 
+The following snippet will create the engine, add some YAML-serialized rules and
+a custom one. Then it reads a CSV file of entries and categorizes them.
 ```ruby
 engine = Muecken::Engine.new
+engine.rules = YAML.load_file(rule_file)
 engine.add_rule example_rule
 Muecken::Parser::CSV.read_file(file_name).each do |entry|
   engine.categorize_entry(entry)
@@ -59,8 +62,49 @@ Muecken::Parser::CSV.read_file(file_name).each do |entry|
 end
 ```
 
-For more examples check the tests under `spec/` or the file `bin/muecken`. I'll
-write a proper documentation once the API is more stable...
+### Defining Rules
+
+A rule needs at least one matcher and at least one category. If one of the
+matcher matches, all the categories are assigned (depending on the rule type it
+can be required that all matcher need to match).
+
+```ruby
+engine.add_rule Muecken::Rules::OneMatch.new(
+  [
+    Muecken::Matcher::SubString.new(%w(jazztel)),
+    Muecken::Matcher::SubString.new(%w(orange)),
+    Muecken::Matcher::SubString.new(%w(movistar))
+  ],
+  [Muecken::Categories::Primary.new('Phone / Internet')]
+)
+require 'yaml'
+puts engine.category.to_yaml
+```
+
+This would output a YAML-serialized rule array like this:
+
+```yaml
+---
+- !ruby/object:Muecken::Rules::OneMatch
+  matcher:
+  - !ruby/object:Muecken::Matcher::SubString
+    sub_strings:
+    - orange
+  - !ruby/object:Muecken::Matcher::SubString
+    sub_strings:
+    - jazztel
+  - !ruby/object:Muecken::Matcher::SubString
+    sub_strings:
+    - movistar
+  categories:
+  - !ruby/object:Muecken::Categories::Primary
+    name: Phone / Internet
+```
+
+This rule would categorize every entry that contains one of the words "jazztel",
+"orange" or "movistar" as "Phone / Internet".
+ 
+For more examples check the tests under `spec/` or the file `bin/muecken`.
 
 ## Categorization
 
