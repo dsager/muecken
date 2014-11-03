@@ -5,7 +5,13 @@ module Muecken
   module Parser
     class CSV
       def self.read_file(file)
-        ::CSV.foreach(file).map { |row| create_entry(row) }
+        entries = []
+        ::CSV.foreach(file, encoding: 'UTF-8') do |row|
+          unless row.compact.empty?
+            entries << create_entry(row)
+          end
+        end
+        entries
       end
 
       def self.create_entry(row)
