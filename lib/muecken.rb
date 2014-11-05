@@ -27,6 +27,3 @@ require 'muecken/rules/builder'
 
 ## Parsers
 require 'muecken/parser/csv'
-
-## Engine
-require 'muecken/engine'
