@@ -47,81 +47,42 @@ mind.
 
 ## Usage
 
-**As mentioned earlier: This is still a very early version and the API is
-subject to change!**
+The following snippet will create a rule which adds the category "Phone" to
+entries containing one of the words "jazztel", "orange" or "movistar". It then
+loads a list of entries from a CSV file and applies the rule to each of them.
 
-The following snippet will create the engine, add some YAML-serialized rules and
-a custom one. Then it reads a CSV file of entries and categorizes them.
 ```ruby
-# declare rules
-rules = YAML.load_file(rule_file)
-rules << example_rule
+# declare rule
+rules = []
+rules << Muecken::Rules::OneMatch.new(
+ [
+   Muecken::Matcher::SubString.new(%w(jazztel)),
+   Muecken::Matcher::SubString.new(%w(orange)),
+   Muecken::Matcher::SubString.new(%w(movistar))
+ ],
+ [Muecken::Categories::Primary.new('Phone')]
+)
 # load entries
 entries = Muecken::Parser::CSV.read_file(file_name)
 # categorize entries
-entries.each { |entry| rules.each { |rule| rule.apply(entry) } }
-
+rules.product(entries) { |rule, entry| rule.apply(entry) }
 ```
-
-### Defining Rules
 
 A rule needs at least one matcher and at least one category. If one of the
 matcher matches, all the categories are assigned (depending on the rule type it
 can be required that all matcher need to match).
 
-```ruby
-engine.add_rule Muecken::Rules::OneMatch.new(
-  [
-    Muecken::Matcher::SubString.new(%w(jazztel)),
-    Muecken::Matcher::SubString.new(%w(orange)),
-    Muecken::Matcher::SubString.new(%w(movistar))
-  ],
-  [Muecken::Categories::Primary.new('Phone / Internet')]
-)
-require 'yaml'
-puts engine.category.to_yaml
-```
-
-This would output a YAML-serialized rule array like this:
-
-```yaml
----
-- !ruby/object:Muecken::Rules::OneMatch
-  matcher:
-  - !ruby/object:Muecken::Matcher::SubString
-    sub_strings:
-    - orange
-  - !ruby/object:Muecken::Matcher::SubString
-    sub_strings:
-    - jazztel
-  - !ruby/object:Muecken::Matcher::SubString
-    sub_strings:
-    - movistar
-  categories:
-  - !ruby/object:Muecken::Categories::Primary
-    name: Phone / Internet
-```
-
-This rule would categorize every entry that contains one of the words "jazztel",
-"orange" or "movistar" as "Phone / Internet".
-
 For more examples check the tests under `spec/` or the reference implementation
 [Muecken CLI](https://github.com/dsager/muecken-cli).
 
-## Categorization
+## Categories
 
-The main task of Muecken is the assignment of the right categories to an entry.
-The biggest part of this categorization happens in an automated way based on a
-few manual assignments the user does. Whenever an entry cannot be categorized
-the user should specify a category manually. The library will "learn" from that
-and categorize future entries properly.
-
-### Primary & Secondary Categories
-
-An entry has to belong to one primary category and optionally to multiple
-secondary categories. For example a category could be "Groceries", "Rent" or
-"Running Costs" while "2014", "More than 100€" or "Credit Card" would be
-secondary ones.
+There are two types of categories: primary and secondary. The idea is that an
+entry has one primary category and optionally multiple secondaries. For example
+a primary category could be "Groceries", "Rent" or "Running Costs" while "2014",
+"More than 100€" or "Credit Card" would be secondary ones. The specific
+implementation of this is up to the consumer though, you can also just use one
+type and don't care about the other.
 
 ## Maintainer
 
