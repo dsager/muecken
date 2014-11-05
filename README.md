@@ -53,13 +53,14 @@ subject to change!**
 The following snippet will create the engine, add some YAML-serialized rules and
 a custom one. Then it reads a CSV file of entries and categorizes them.
 ```ruby
-engine = Muecken::Engine.new
-engine.rules = YAML.load_file(rule_file)
-engine.add_rule example_rule
-Muecken::Parser::CSV.read_file(file_name).each do |entry|
-  engine.categorize_entry(entry)
-  engine.add_entry(entry)
-end
+# declare rules
+rules = YAML.load_file(rule_file)
+rules << example_rule
+# load entries
+entries = Muecken::Parser::CSV.read_file(file_name)
+# categorize entries
+entries.each { |entry| rules.each { |rule| rule.apply(entry) } }
+
 ```
 
 ### Defining Rules
@@ -103,8 +104,9 @@ This would output a YAML-serialized rule array like this:
 
 This rule would categorize every entry that contains one of the words "jazztel",
 "orange" or "movistar" as "Phone / Internet".
- 
-For more examples check the tests under `spec/` or the file `bin/muecken`.
+
+For more examples check the tests under `spec/` or the reference implementation
+[Muecken CLI](https://github.com/dsager/muecken-cli).
 
 ## Categorization
 
@@ -114,20 +116,12 @@ few manual assignments the user does. Whenever an entry cannot be categorized
 the user should specify a category manually. The library will "learn" from that
 and categorize future entries properly.
 
-### Categories & Secondary Categories
+### Primary & Secondary Categories
 
-An entry has to belong to one category and optionally to multiple secondary
-categories. For example a category could be "Groceries", "Rent" or "Running
-Costs" while "2014", "More than 100€" or "Credit Card" would be secondary
-categories.
-
-### How it works
-
-For each entry the following steps are executed:
-
-- Loop through all defined categories and assign matching ones to the entry
-- Raise an error if the entry does not have at least one type category
-  - This error needs to be caught so that a manual categorization can be done
+An entry has to belong to one primary category and optionally to multiple
+secondary categories. For example a category could be "Groceries", "Rent" or
+"Running Costs" while "2014", "More than 100€" or "Credit Card" would be
+secondary ones.
 
 ## Maintainer
 
