@@ -5,14 +5,14 @@ describe Muecken::Parser::CSV do
   describe '#create_entry' do
     let(:date) { Date.today }
     let(:description) { 'Foo Bar Invoice Baz' }
-    let(:value) { -123.45 }
+    let(:val) { -123.45 }
     let(:currency) { 'EUR' }
-    let(:row) { CSV.parse("#{date}, #{description}, #{value}, #{currency}") }
+    let(:row) { CSV.parse("#{date}, #{description}, #{val}, #{currency}") }
     it 'creates an entry from a CSV row' do
       entry = Muecken::Parser::CSV.create_entry(row.first)
       entry.date.must_equal date
       entry.description.must_equal description
-      entry.value.must_equal value
+      entry.value.must_equal val
       entry.currency.must_equal currency
     end
   end
