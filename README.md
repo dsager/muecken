@@ -13,30 +13,13 @@ provide an easy way of parsing, analyzing and categorizing financial data to
 give you an overview of where money comes from and, most probably more
 important, where it goes to...
 
-```                                                       
-
-  +-------+       +---------+       +------------+   
-  |       |       |         |       |            |   
-  |  CSV  | +---> |         | +---> |  Entries   |   
-  |       |       |         |       |            |   
-  +-------+       |         |       +-----+------+   
-                  | Muecken |             |          
-  +-------+       |         |       +-----+------+   
-  |       |       |         |       |            |   
-  |  API  | +---> |         | +---> | Categories |   
-  |       |       |         |       |            |   
-  +-------+       +---------+       +------------+   
-
-```
-
 Muecken in it's most basic sense takes data from a source like a CSV file or an
 API, parses and analyzes it so that you end up with categorized entries. While
 entries represent transactions (e.g. paying your rent or getting your salary),
 categories are defined by the user and therefore completely dynamic.
 
-The creation of fancy diagrams and reports is not part of this library. Once
-Muecken is stable I'll start working on an app that does this kind of things. In
-case you are interested in collaborating on something in that direction feel
+For now the creation of fancy diagrams and reports is not part of this library.
+In case you are interested in collaborating on something in that direction feel
 free to contact me!
 
 The main design goals for this library are simplicity, speed and stability - so
@@ -72,8 +55,7 @@ A rule needs at least one matcher and at least one category. If one of the
 matcher matches, all the categories are assigned (depending on the rule type it
 can be required that all matcher need to match).
 
-For more examples check the tests under `spec/` or the reference implementation
-[Muecken CLI](https://github.com/dsager/muecken-cli).
+For more examples check the tests under `spec/` or the [executable](bin/muecken).
 
 ## Categories
 
